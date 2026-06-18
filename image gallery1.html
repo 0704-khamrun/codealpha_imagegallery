@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Purple Neon Gallery</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:'Segoe UI',Arial,sans-serif;
+
+background:
+linear-gradient(
+135deg,
+#14001f,
+#2e1065,
+#4c1d95
+);
+
+color:white;
+}
+
+
+/* NAVBAR */
+
+.navbar{
+
+position:sticky;
+top:0;
+z-index:100;
+
+padding:18px 25px;
+
+display:flex;
+align-items:center;
+
+background:
+rgba(20,0,31,.85);
+
+backdrop-filter:blur(15px);
+
+border-bottom:
+1px solid rgba(250,204,21,.25);
+
+}
+
+
+.logo{
+
+font-size:26px;
+
+font-weight:800;
+
+background:
+linear-gradient(
+90deg,
+#facc15,
+#fb7185,
+#c084fc
+);
+
+-webkit-background-clip:text;
+
+color:transparent;
+
+}
+
+
+
+/* SEARCH */
+
+.search{
+
+display:block;
+
+margin:25px auto;
+
+width:340px;
+
+max-width:90%;
+
+padding:15px 22px;
+
+border-radius:40px;
+
+border:none;
+
+outline:none;
+
+font-size:16px;
+
+color:white;
+
+background:
+rgba(255,255,255,.10);
+
+border:
+1px solid rgba(250,204,21,.25);
+
+}
+
+
+
+.search::placeholder{
+
+color:#ddd;
+
+}
+
+
+
+/* FILTERS */
+
+.filters{
+
+display:flex;
+
+justify-content:center;
+
+gap:12px;
+
+flex-wrap:wrap;
+
+padding:15px;
+
+}
+
+
+
+.filters button{
+
+padding:11px 20px;
+
+border-radius:30px;
+
+border:none;
+
+cursor:pointer;
+
+color:white;
+
+font-weight:600;
+
+background:
+rgba(255,255,255,.10);
+
+border:
+1px solid rgba(236,72,153,.25);
+
+transition:.3s;
+
+}
+
+
+
+.filters button:hover{
+
+transform:translateY(-3px);
+
+background:
+rgba(236,72,153,.25);
+
+}
+
+
+
+.filters button.active{
+
+background:
+linear-gradient(
+135deg,
+#f97316,
+#ec4899
+);
+
+}
+
+
+
+/* GALLERY */
+
+.gallery{
+
+columns:4 260px;
+
+column-gap:22px;
+
+padding:30px;
+
+}
+
+
+
+.card{
+
+break-inside:avoid;
+
+margin-bottom:22px;
+
+border-radius:22px;
+
+overflow:hidden;
+
+position:relative;
+
+background:#2e1065;
+
+border:
+1px solid rgba(255,255,255,.15);
+
+box-shadow:
+0 15px 35px rgba(0,0,0,.45);
+
+transition:.4s;
+
+}
+
+
+
+.card:hover{
+
+transform:translateY(-8px);
+
+}
+
+
+
+.card img{
+
+width:100%;
+
+display:block;
+
+transition:.5s;
+
+}
+
+
+
+.card:hover img{
+
+transform:scale(1.1);
+
+}
+
+
+
+.tag{
+
+position:absolute;
+
+bottom:15px;
+
+left:15px;
+
+padding:8px 18px;
+
+border-radius:30px;
+
+background:
+rgba(20,0,31,.75);
+
+font-size:14px;
+
+font-weight:600;
+
+}
+
+
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+.gallery{
+
+columns:2 150px;
+
+padding:15px;
+
+}
+
+
+.logo{
+
+font-size:20px;
+
+}
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="navbar">
+
+<div class="logo">
+📸 IMAGE GALLERY
+</div>
+
+</div>
+
+
+
+<input
+class="search"
+id="search"
+placeholder="Search category..."
+>
+
+
+
+
+<div class="filters">
+
+<button class="active" data="All">
+All
+</button>
+
+<button data="Nature">
+🌿 Nature
+</button>
+
+<button data="Animals">
+🐶 Animals
+</button>
+
+<button data="Travel">
+✈ Travel
+</button>
+
+<button data="Food">
+🍕 Food
+</button>
+
+<button data="Cars">
+🚗 Cars
+</button>
+
+<button data="City">
+🏙 City
+</button>
+
+<button data="Tech">
+💻 Tech
+</button>
+
+</div>
+
+
+
+<div class="gallery" id="gallery"></div>
+
+
+
+<script>
+
+
+let images=[];
+
+let filter="All";
+
+let search="";
+
+
+
+function createImages(){
+
+
+let data=[
+
+["Nature","1501785888041-af3ef285b470"],
+["Nature","1441974231531-c6227db76b6e"],
+["Nature","1469474968028-56623f02e42e"],
+["Nature","1500530855697-b586d89ba3ee"],
+
+["Animals","1552053831-71594a27632d"],
+["Animals","1507149833265-60c372daea22"],
+["Animals","1546182990-dffeafbe841d"],
+["Animals","1452570053594-1b985d6ea890"],
+
+["Travel","1507525428034-b723cf961d3e"],
+["Travel","1516483638261-f4dbaf036963"],
+["Travel","1470214304380-aadaedcfff1b"],
+
+["Food","1504674900247-0877df9cc836"],
+["Food","1546069901-ba9599a7e63c"],
+
+["Cars","1492144534655-ae79c964c9d7"],
+["Cars","1503376780353-7e6692767b70"],
+
+["City","1491884662610-dfcd28f30cfb"],
+["City","1480714378408-67cf0d13bc1b"],
+
+["Tech","1518770660439-4636190af475"],
+["Tech","1550751827-4bd374c3f58b"]
+
+];
+
+
+data.forEach(item=>{
+
+
+images.push({
+
+cat:item[0],
+
+src:
+"https://images.unsplash.com/photo-"+item[1]+
+"?auto=format&fit=crop&w=700&q=80"
+
+});
+
+
+});
+
+
+}
+
+
+
+
+function render(){
+
+
+let gallery=document.getElementById("gallery");
+
+gallery.innerHTML="";
+
+
+let result=images.filter(img=>{
+
+
+return (
+
+(filter==="All" || img.cat===filter)
+
+&&
+
+img.cat.toLowerCase()
+.includes(search)
+
+);
+
+
+});
+
+
+
+result.forEach(img=>{
+
+
+let card=document.createElement("div");
+
+
+card.className="card";
+
+
+card.innerHTML=`
+
+<img loading="lazy" src="${img.src}">
+
+<div class="tag">
+${img.cat}
+</div>
+
+`;
+
+
+gallery.appendChild(card);
+
+
+});
+
+
+}
+
+
+
+
+document.querySelectorAll(".filters button")
+.forEach(btn=>{
+
+
+btn.onclick=()=>{
+
+
+document.querySelectorAll(".filters button")
+.forEach(b=>b.classList.remove("active"));
+
+
+btn.classList.add("active");
+
+
+filter=btn.getAttribute("data");
+
+
+render();
+
+
+};
+
+
+});
+
+
+
+
+
+document.getElementById("search")
+.oninput=function(){
+
+
+search=this.value.toLowerCase();
+
+
+render();
+
+
+};
+
+
+
+
+createImages();
+
+render();
+
+
+</script>
+
+
+</body>
+
+</html>
